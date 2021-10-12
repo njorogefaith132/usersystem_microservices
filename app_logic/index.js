@@ -15,8 +15,8 @@ app.use(express.urlencoded({extended : false}));
 app.use(express.json());
 app.use(cors())
 
-app.use('/user/project' , projects)
-app.use('/user/project/task' , tasks)
+app.use('/user/projects' , projects)
+app.use('/project/task' , tasks)
 
 
 

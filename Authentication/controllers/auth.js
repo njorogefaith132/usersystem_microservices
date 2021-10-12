@@ -21,10 +21,10 @@ module.exports = {
       let results = await db.exec("getUser", { username ,password});
   
       const user = results.recordset[0];
-      if (!user) return done("Account does not exist");
+      if (!user) return res.send({message:"Account does not exist"});
       
       const validPass = await bcrypt.compare(password, user.password);
-      if (!validPass) return done("Invalid credentials");
+      if (!validPass) return res.send({message:"Invalid credentials"});
   
       const token = gentoken(user.id)
   
@@ -59,7 +59,10 @@ module.exports = {
         password,
         usertype
       });
-      const user = results.recordset[0]
+    
+      let regUser = await db.exec("getusername" , {username});
+      const user = regUser.recordset[0]
+      console.log(user);
       const token = gentoken(user.id)
       res.send({message: "User created successfully",user,token});
     } catch (error) {
