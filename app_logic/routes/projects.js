@@ -5,17 +5,7 @@ const verifyToken = require('../middleware/auth');
 const {create, getOneProject, deleteProject, updateProject}  = require('../contol/projectControllers')
 
 
-router.post('/create', (req, res)=>{
-    create(
-         req.body.projectname,
-         req.body.username,
-         req.body.project_description ,(error, message) => {
-            if (error) return res.status(200).send({ message: error });
-            res.send({ message});
-    
-          });
-
-})  
+router.post('/create', create);  
 
 
 router.get('/project', (req, res)=>{

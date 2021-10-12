@@ -6,9 +6,10 @@ const db = require('../db/dbConnection');
 
 
 module.exports ={
-    create: async(projectname,username,project_description, done) =>{
+    create: async(req, res) =>{
         
         try {
+            const {projectname,username,project_description} =  req.body
     
             let results = await db
             .exec("createProject" ,{projectname,username,project_description})
@@ -16,26 +17,27 @@ module.exports ={
              console.log(results.recordset);
              const project = results.recordset[0]
              
-      done(null, { message: "Project Created successfully",project});
+      res.send({ message: "Project Created successfully",project});
 
          } catch (error) {
-            done(error.message);
+            res.send(error.message);
          }
 
     },
 
-    getOneProject : async (projectname, done) =>{
+    getOneProject : async (req,res) =>{
     
         try {
+            const {projectname} = req.body
     
             let results = await db
             .exec("getProject", { projectname})
     
              console.log(results.recordset);
              const project = results.recordset[0]
-             done(null, {project})
+             res.send({project})
          } catch (error) {
-            done(error.message);
+            res.send(error.message);
          }
 
 
