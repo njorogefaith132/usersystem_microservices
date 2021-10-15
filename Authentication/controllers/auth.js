@@ -17,12 +17,13 @@ module.exports = {
     try {
       
       const {username, password} = req.body
-  
-      let results = await db.exec("getUser", { username ,password});
-  
-      const user = results.recordset[0];
-      if (!user) return res.send({message:"Account does not exist"});
+      let result = await db.exec("getUserByUsername", { username});
       
+      const userusername = result.recordset[0];
+      if (!userusername) return res.send({message:"Account does not exist"});
+      
+      let results = await db.exec("getUser", { username ,password});
+      const user = results.recordset[0]
       const validPass = await bcrypt.compare(password, user.password);
       if (!validPass) return res.send({message:"Invalid credentials"});
   
@@ -53,6 +54,11 @@ module.exports = {
       const salt = await bcrypt.genSalt(10);
       const password = await bcrypt.hash(pass, salt);
       const {username, usertype} = req.body;
+      let result = await db.exec("getUserByUsername", { username});
+      
+      const userusername = result.recordset[0];
+      if (userusername) return res.send({message:"Account already exists"});
+      
       console.log({password});
       let results = await db.exec("postUsers", {
         username,
@@ -70,15 +76,7 @@ module.exports = {
     }
   },
 
-  deleteUser: async (username) => {
-    try {
-      let results = await db.exec("deleteUser", { username });
-
-      console.log(results.recordset);
-    } catch (error) {
-      console.log(error.message);
-    }
-  },
+  
   
   updatePassword: async (username, password) => {
     try {
